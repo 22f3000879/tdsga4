@@ -1,0 +1,31 @@
+name: Daily Committ
+
+on:
+  schedule:
+    - cron: '4 14 * * *'   # Runs daily at 14:04 UTC
+  workflow_dispatch:        # Manual trigger option
+
+permissions:
+  contents: write
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      # 👇 Requirement: your email MUST be here in the step name
+      - name: 22f3000879@ds.study.iitm.ac.in
+        run: |
+          git config user.name "auto-commit"
+          git config user.email "22f3000879@ds.study.iitm.ac.in"
+
+      - name: Make a dummy commit
+        run: |
+          echo "Run at $(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> daily-log.txt
+          git add daily-log.txt
+          git commit -m "Daily commit at $(date -u)" || echo "Nothing to commit"
+          git push origin main
